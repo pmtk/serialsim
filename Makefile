@@ -1,6 +1,8 @@
 obj-m += serialsim.o
 
-my_moddir = /lib/modules/$(shell uname -r)
+KERNEL_VER ?= $(shell uname -r)
+
+my_moddir = /lib/modules/$(KERNEL_VER)
 
 ccflags-y += -I$(src)/include
 
@@ -16,7 +18,7 @@ private_key.der: openssl.conf
 		-batch -config openssl.conf -outform DER \
 		-out public_key.der  -keyout private_key.der
 
-KERNELBASE=/usr/src/linux-headers-$(shell uname -r)
+KERNELBASE=/usr/src/linux-headers-$(KERNEL_VER)
 
 sign: all private_key.der
 	$(KERNELBASE)/scripts/sign-file sha256 \
